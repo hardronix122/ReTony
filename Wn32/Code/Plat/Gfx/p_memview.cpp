@@ -279,7 +279,7 @@ const char * MemView_GetClassName(CCallStack *c)
 }
 
 
-void MemView_DumpBlockInfo(int cursor)
+void MemView_DumpBlockInfo(uintptr_t cursor)
 {
 #	ifdef	__LINKED_LIST_HEAP__
 	
@@ -320,7 +320,7 @@ void MemView_DumpBlockInfo(int cursor)
 	}
 	else
 	{
-		void * p_start = (void*)((uint)pBlock + Mem::Allocator::BlockHeader::sSize);
+		void * p_start = (void*)((uintptr_t)pBlock + Mem::Allocator::BlockHeader::sSize);
 		sprintf( os, "Block found, addr = %p, size = %d (Header = %d)\n",p_start,pBlock->mSize,Mem::Allocator::BlockHeader::sSize);
 		printf("%s", os);
 
@@ -467,9 +467,9 @@ int MemView_CountBlocks(Mem::Allocator::BlockHeader *p_header)
 	int num_used = 0;
 	while ( p_header )
 	{
-		void * p_start = (void*)((uint)p_header + Mem::Allocator::BlockHeader::sSize);
+		void * p_start = (void*)((uintptr_t)p_header + Mem::Allocator::BlockHeader::sSize);
 		
-		*p_used++ = (uint32)p_start;	 		// store the start of the block
+		*p_used++ = (uintptr_t)p_start;	 		// store the start of the block
 		*p_used++ = 0;							// store a count
 		p_header = p_header->mp_next_used;
 		num_used++;
@@ -687,8 +687,8 @@ void MemView_DumpFragments(Mem::Heap *pHeap)
 		if (p_full > p_free)
 		{
 			printf( "Framgented Block: " );
-			void * p_start = (void*)((uint)p_full + Mem::Allocator::BlockHeader::sSize);
-			MemView_DumpBlockInfo((int)p_start);
+			void * p_start = (void*)((uintptr_t)p_full + Mem::Allocator::BlockHeader::sSize);
+			MemView_DumpBlockInfo((uintptr_t)p_start);
 		}
 		p_full = p_full->mp_next_used;
 	}
@@ -704,8 +704,8 @@ void MemView_DumpHeap( Mem::Heap *pHeap )
 	while( p_full )
 	{
 		printf ("\n");
-		void * p_start = (void*)((uint)p_full + Mem::Allocator::BlockHeader::sSize);
-		MemView_DumpBlockInfo((int)p_start);
+		void * p_start = (void*)((uintptr_t)p_full + Mem::Allocator::BlockHeader::sSize);
+		MemView_DumpBlockInfo((uintptr_t)p_start);
 		p_full = p_full->mp_next_used;
 	}
 	#endif
