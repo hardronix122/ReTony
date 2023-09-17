@@ -105,10 +105,6 @@ namespace Pcm
 		public:
 			MusicDecoder(std::filesystem::path path) : file(path, std::ios::binary)
 			{
-                if(!std::filesystem::exists(path)) {
-                    printf("%s DOES NOT EXIST!\n", path.c_str());
-                }
-
 				ma_decoder_config config = ma_decoder_config_init(ma_format_f32, 5, 48000);
 				ma_decoder_init(
 					[](ma_decoder *pDecoder, void *pBufferOut, size_t bytesToRead, size_t *pBytesRead) -> ma_result
