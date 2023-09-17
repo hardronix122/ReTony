@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  push:
+    branches: ["*"]
+
+jobs:
+  win:
+    runs-on: windows-2022
+    name: Windows
+    defaults:
+      run:
+        shell: msys {0}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw32
+          pacboy: >-
+            gcc:p
+            lld:p
+            cmake:p
+
+      - name: Build
+        run: |
+          mkdir -p build
+          cd build
+          cmake -G "MinGW Makefiles" -DCMAKE_C_FLAGS="-fuse-ld=lld" -DCMAKE_CXX_FLAGS="-fuse-ld=lld"
+          mingw32-make -j4
