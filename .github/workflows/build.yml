@@ -33,3 +33,10 @@ jobs:
           cd build
           cmake -G "MinGW Makefiles" -DCMAKE_C_FLAGS="-fuse-ld=lld" -DCMAKE_CXX_FLAGS="-fuse-ld=lld" ..
           mingw32-make -j4
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Windows
+          path: |
+            build/TonyRE.exe
