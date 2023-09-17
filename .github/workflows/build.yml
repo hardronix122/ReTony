@@ -37,6 +37,7 @@ jobs:
             gcc:p
             lld:p
             make:p
+            ccache:p
             cmake:p
 
       - name: Build
