@@ -11,6 +11,8 @@ namespace UserSoundtrack
 	{
 		// Get user soundtrack path
 		std::filesystem::path usersoundtrack_path = File::ModulePath() / "Soundtracks";
+		if (!std::filesystem::exists(usersoundtrack_path))
+			return Soundtracks();
 
 		// Iterate over folders in user soundtrack path
 		Soundtracks soundtracks;
