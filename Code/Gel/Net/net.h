@@ -1117,7 +1117,7 @@ public:
 	
 	void			ShutDown( void );
     		
-	//SOCKET			GetSocket( void );
+	SOCKET			GetSocket( void );
 	void			SetForeignPacketHandler( ForeignPacketHandlerCode* code );
 
 	unsigned int	m_Timestamp;
@@ -1145,8 +1145,8 @@ protected:
 	bool			bind_app_socket( int address, unsigned short port );
 
 	Lst::Node< App >	m_node;
-	//SOCKET		m_socket;
-	//struct	sockaddr_in	m_local_address;
+	SOCKET		m_socket;
+	struct	sockaddr_in	m_local_address;
 	bool	m_connected;
 	
 	Manager *m_net_man;	

@@ -65,7 +65,7 @@ protected:
 	static	MsgHandlerCode	handle_timestamp;
 	static	MsgHandlerCode	handle_connection_refusal;
 
-	//struct	sockaddr_in	m_server_address;
+	struct	sockaddr_in	m_server_address;
 
 };
 
