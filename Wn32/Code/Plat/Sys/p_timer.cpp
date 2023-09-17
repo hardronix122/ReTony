@@ -115,7 +115,7 @@ static double GetDoubleTime(void)
 
     currentTime = std::chrono::high_resolution_clock::now();
 
-    return std::chrono::duration_cast<std::chrono::duration<double>>(start - currentTime).count();
+    return std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - start).count();
 }
  
 void Init(void)
