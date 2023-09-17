@@ -10,7 +10,7 @@ jobs:
     name: Windows
     defaults:
       run:
-        shell: msys {0}
+        shell: msys2 {0}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
