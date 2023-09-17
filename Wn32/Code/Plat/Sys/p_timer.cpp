@@ -23,9 +23,8 @@
 **							  	  Includes									**
 *****************************************************************************/
 
-#include <windows.h>
-#include <mmsystem.h>
-#include <time.h>
+#include <ctime>
+#include <chrono>
 #include <Sys/timer.h>
 #include <Sys/Profiler.h>
 #include <Sys/Config/config.h>
@@ -105,16 +104,18 @@ Manager::~Manager ( void )
 
 static double GetDoubleTime(void)
 {
-	static LARGE_INTEGER freq;
-	static bool first = true;
-	if (first)
-	{
-		QueryPerformanceFrequency(&freq);
-		first = false;
-	}
-	LARGE_INTEGER now;
-	QueryPerformanceCounter(&now);
-	return (double)now.QuadPart / (double)freq.QuadPart;
+    static std::chrono::high_resolution_clock::time_point start;
+    static std::chrono::high_resolution_clock::time_point currentTime;
+    static bool first = true;
+
+    if(first) {
+        start = std::chrono::high_resolution_clock::now();
+        first = false;
+    }
+
+    currentTime = std::chrono::high_resolution_clock::now();
+
+    return std::chrono::duration_cast<std::chrono::duration<double>>(start - currentTime).count();
 }
  
 void Init(void)
