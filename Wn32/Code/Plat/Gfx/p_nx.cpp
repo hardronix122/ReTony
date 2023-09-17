@@ -14,6 +14,10 @@
 #include <Gel/Scripting/script.h>
 #include <Gel/mainloop.h>
 
+#ifdef __PLAT_LINUX__
+#include <csignal>
+#endif
+
 #include "p_NxMesh.h"
 #include "p_NxGeom.h"
 #include "p_NxSprite.h"
