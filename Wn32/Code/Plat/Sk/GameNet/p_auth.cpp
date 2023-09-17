@@ -48,7 +48,7 @@ namespace GameNet
 **								   Defines									**
 *****************************************************************************/
 
-// const DWORD vMAX_MEMORY_UNITS  = 2 * XGetPortCount();
+// const uint32_t vMAX_MEMORY_UNITS  = 2 * XGetPortCount();
 /*****************************************************************************
 **								Private Types								**
 *****************************************************************************/
@@ -75,7 +75,7 @@ namespace GameNet
 /*                                                                */
 /******************************************************************/
 
-static DWORD	s_get_mem_unit_slot( DWORD i )
+static uint32_t	s_get_mem_unit_slot( uint32_t i )
 {
 	#	if 0
 	return( ( i % 2 ) ? XDEVICE_BOTTOM_SLOT : XDEVICE_TOP_SLOT );	
@@ -88,7 +88,7 @@ static DWORD	s_get_mem_unit_slot( DWORD i )
 /*                                                                */
 /******************************************************************/
 
-static DWORD	s_get_mem_unit_port( DWORD i )
+static uint32_t	s_get_mem_unit_port( uint32_t i )
 {
 	return( i / 2 );
 }
@@ -98,7 +98,7 @@ static DWORD	s_get_mem_unit_port( DWORD i )
 /*                                                                */
 /******************************************************************/
 
-static DWORD	s_get_mem_unit_mask( DWORD i )
+static uint32_t	s_get_mem_unit_mask( uint32_t i )
 {
 	#	if 0
 	// The XGetDevices bitmask is formatted as follows:
@@ -112,7 +112,7 @@ static DWORD	s_get_mem_unit_mask( DWORD i )
     //      0x00000008      port 3 top slot             6
     //      0x00080000      port 3 bottom slot          7
 
-    DWORD dwMask = 1 << s_get_mem_unit_port( i );
+    uint32_t dwMask = 1 << s_get_mem_unit_port( i );
     if( s_get_mem_unit_slot( i ) == XDEVICE_BOTTOM_SLOT )
         dwMask <<= 16;
 
@@ -130,7 +130,7 @@ static DWORD	s_get_mem_unit_mask( DWORD i )
 int		AuthMan::gather_user_list( void )
 {
     // Get accounts stored on the hard disk
-    DWORD num_users = 0;
+    uint32_t num_users = 0;
 
 #	if 0
 	// On input, the list must have room for XONLINE_MAX_STORED_ONLINE_USERS
@@ -140,7 +140,7 @@ int		AuthMan::gather_user_list( void )
     HRESULT hr = XOnlineGetUsers( user_list, &num_users);
     if( SUCCEEDED(hr) )
     {
-        for( DWORD i = 0; i < num_users; ++i )
+        for( uint32_t i = 0; i < num_users; ++i )
 		{
 			XONLINE_USER* new_user;
 			
@@ -239,8 +239,8 @@ bool	AuthMan::xbox_has_voice_device( void )
 {
 	return false;
 	
-//	DWORD dwConnectedMicrophones = XGetDevices( XDEVICE_TYPE_VOICE_MICROPHONE );
-//	DWORD dwConnectedHeadphones = XGetDevices( XDEVICE_TYPE_VOICE_HEADPHONE );
+//	uint32_t dwConnectedMicrophones = XGetDevices( XDEVICE_TYPE_VOICE_MICROPHONE );
+//	uint32_t dwConnectedHeadphones = XGetDevices( XDEVICE_TYPE_VOICE_HEADPHONE );
 
     // Voice is available if there's at least one mike and one headphone
 //	return( dwConnectedMicrophones >= 1 && dwConnectedHeadphones  >= 1 );
@@ -295,7 +295,7 @@ void	AuthMan::check_logon_progress( void )
 		BOOL success = TRUE;
 		BOOL service_err = FALSE;
 		HRESULT hrService = S_OK;
-		DWORD i = 0;
+		uint32_t i = 0;
 		
 		// Next, check if the user was actually logged on
 		PXONLINE_USER pLoggedOnUsers = XOnlineGetLogonUsers();
@@ -349,7 +349,7 @@ void	AuthMan::check_logon_progress( void )
 		}			
 		else
 		{
-			DWORD player_state;
+			uint32_t player_state;
 
 			m_service_info_list.Reset();
 			for( i = 0; i < vNUM_SERVICES; ++i )
@@ -425,7 +425,7 @@ void	AuthMan::SelectAccount( int index )
 	// m_chosen_account = index;
 
 #	if 0
-	DWORD pin_required = m_user_list[ m_chosen_account ].dwUserOptions & XONLINE_USER_OPTION_REQUIRE_PIN;
+	uint32_t pin_required = m_user_list[ m_chosen_account ].dwUserOptions & XONLINE_USER_OPTION_REQUIRE_PIN;
 	if( pin_required )
 	{
 		m_state = vSTATE_GET_PIN;
@@ -442,7 +442,7 @@ void	AuthMan::SelectAccount( int index )
 /*                                                                */
 /******************************************************************/
 
-void	AuthMan::PinAttempt( BYTE* pin )
+void	AuthMan::PinAttempt( uint8_t* pin )
 {	
 	(void)pin;
 #	if 0
@@ -703,7 +703,7 @@ void	PinEntry::EndInput( void )
 /*                                                                */
 /******************************************************************/
 
-BYTE*	PinEntry::GetPin( void )
+uint8_t*	PinEntry::GetPin( void )
 {
 //	return m_pin;
 	return nullptr;
