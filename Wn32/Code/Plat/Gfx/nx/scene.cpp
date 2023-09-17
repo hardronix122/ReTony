@@ -40,7 +40,7 @@ int sort_by_material_draw_order( const void *p1, const void *p2 )
 				// If the pixel shaders are the same, sort by material address, otherwise sort by pixel shader value.
 				if( p_mesh1->m_pixel_shader == p_mesh2->m_pixel_shader )
 				{
-					return ((uint32)p_material1 > (uint32)p_material2 ) ? 1 : -1;
+					return ((uintptr_t)p_material1 > (uintptr_t)p_material2 ) ? 1 : -1;
 				}
 				else
 				{
