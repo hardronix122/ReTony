@@ -24,6 +24,7 @@ jobs:
           pacboy: >-
             gcc:p
             lld:p
+            make:p
             cmake:p
 
       - name: Build
