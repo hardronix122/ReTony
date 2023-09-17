@@ -22,7 +22,6 @@
 **							  	  Includes									**
 *****************************************************************************/
 
-#include <Windows.h>
 #include <Core/Defines.h>
 #include <Core/singleton.h>
 
@@ -667,26 +666,26 @@ bool Card::MountFailedDueToCardUnformatted()
 /******************************************************************/
 int	Card::GetNumFreeClusters( void )
 {
-	if( m_mounted_drive_letter )
-	{
-		char p_drive[20];
-		strcpy(p_drive,"z:\\");
-		
-		ULARGE_INTEGER	uliFreeAvail;
-		ULARGE_INTEGER	uliTotal;
-
-		p_drive[0] = m_mounted_drive_letter;
-		BOOL br		= GetDiskFreeSpaceEx( p_drive, &uliFreeAvail, &uliTotal, nullptr );
-		if( br )
-		{
-			// Each increment of HighPart represents 2^32 bytes, which is (2^32)/16384=262144 blocks.
-			return uliFreeAvail.HighPart*262144 + uliFreeAvail.LowPart/16384;
-		}
-		else
-		{
-			return 0;
-		}
-	}
+//	if( m_mounted_drive_letter )
+//	{
+//		char p_drive[20];
+//		strcpy(p_drive,"z:\\");
+//
+//		ULARGE_INTEGER	uliFreeAvail;
+//		ULARGE_INTEGER	uliTotal;
+//
+//		p_drive[0] = m_mounted_drive_letter;
+//		BOOL br		= GetDiskFreeSpaceEx( p_drive, &uliFreeAvail, &uliTotal, nullptr );
+//		if( br )
+//		{
+//			// Each increment of HighPart represents 2^32 bytes, which is (2^32)/16384=262144 blocks.
+//			return uliFreeAvail.HighPart*262144 + uliFreeAvail.LowPart/16384;
+//		}
+//		else
+//		{
+//			return 0;
+//		}
+//	}
 	return 0;
 }
 
@@ -738,107 +737,107 @@ File* Card::Open( const char* filename, int mode, int size )
 	(void)filename;
 	(void)mode;
 	(void)size;
-
-	Dbg_Assert( m_mounted_drive_letter != 0 );
-
-	m_last_error=0;
-	
-	File*	p_file		= nullptr;
-	HANDLE	handle;
-
-	// Seems incoming filenames are of the form /foo/bar etc.
-	cardFilenameBuffer[0] = m_mounted_drive_letter;
-	cardFilenameBuffer[1] = ':';
-
-	int index = 2;
-	while ((cardFilenameBuffer[index] = *filename) != '\0')
-	{
-		// Switch forward slash directory separators to the supported backslash.
-		if( cardFilenameBuffer[index] == '/' )
-		{
-			cardFilenameBuffer[index] = '\\';
-		}
-		++index;
-		++filename;
-	}
-
-	DWORD dwDesiredAccess;
-	DWORD dwCreationDisposition;
-
-	switch( mode )
-	{
-		case File::mMODE_READ:
-		{
-			dwDesiredAccess			= GENERIC_READ;
-			dwCreationDisposition	= OPEN_EXISTING;
-			break;
-		}
-
-		case File::mMODE_WRITE:
-		{
-			dwDesiredAccess			= GENERIC_WRITE;
-			dwCreationDisposition	= OPEN_EXISTING;
-			break;
-		}
-
-		case ( File::mMODE_WRITE | File::mMODE_CREATE ):
-		{
-			dwDesiredAccess			= GENERIC_WRITE;
-			dwCreationDisposition	= OPEN_ALWAYS;
-			break;
-		}
-
-		case File::mMODE_CREATE:
-		{
-			dwDesiredAccess			= GENERIC_WRITE;
-			dwCreationDisposition	= CREATE_NEW;
-			break;
-		}
-
-		case ( File::mMODE_READ | File::mMODE_WRITE ):
-		{
-			dwDesiredAccess	= GENERIC_READ | GENERIC_WRITE;
-			dwCreationDisposition	= OPEN_EXISTING;
-			break;
-		}
-
-		default:
-		{
-			Dbg_Assert( 0 );
-			return nullptr;
-		}
-	}
-
-	handle = CreateFile(	cardFilenameBuffer,							// file name
-							dwDesiredAccess,							// access mode
-							0,											// share mode
-							nullptr,										// security attributes
-							dwCreationDisposition,						// how to create
-							FILE_ATTRIBUTE_NORMAL,						// file attributes and flags
-							nullptr );				                        // handle to template file
-
-	if( handle != INVALID_HANDLE_VALUE )
-	{
-		p_file = new File( (int)handle, this );
-		
-		WIN32_FILE_ATTRIBUTE_DATA file_attribute_data;
-		if (GetFileAttributesEx(cardFilenameBuffer,GetFileExInfoStandard,&file_attribute_data))
-		{
-//			Skate3 code, disabled for now.
-#			if 0
-			p_file->m_file_time=file_attribute_data.ftLastWriteTime;
-#			endif
-		}	
-		
-		return p_file;
-	}
-	else
-	{
-		if (GetLastError()==ERROR_DISK_FULL)
-		{
-			m_last_error=vINSUFFICIENT_SPACE;
-		}
-	}	
+//
+//	Dbg_Assert( m_mounted_drive_letter != 0 );
+//
+//	m_last_error=0;
+//
+//	File*	p_file		= nullptr;
+//	HANDLE	handle;
+//
+//	// Seems incoming filenames are of the form /foo/bar etc.
+//	cardFilenameBuffer[0] = m_mounted_drive_letter;
+//	cardFilenameBuffer[1] = ':';
+//
+//	int index = 2;
+//	while ((cardFilenameBuffer[index] = *filename) != '\0')
+//	{
+//		// Switch forward slash directory separators to the supported backslash.
+//		if( cardFilenameBuffer[index] == '/' )
+//		{
+//			cardFilenameBuffer[index] = '\\';
+//		}
+//		++index;
+//		++filename;
+//	}
+//
+//	DWORD dwDesiredAccess;
+//	DWORD dwCreationDisposition;
+//
+//	switch( mode )
+//	{
+//		case File::mMODE_READ:
+//		{
+//			dwDesiredAccess			= GENERIC_READ;
+//			dwCreationDisposition	= OPEN_EXISTING;
+//			break;
+//		}
+//
+//		case File::mMODE_WRITE:
+//		{
+//			dwDesiredAccess			= GENERIC_WRITE;
+//			dwCreationDisposition	= OPEN_EXISTING;
+//			break;
+//		}
+//
+//		case ( File::mMODE_WRITE | File::mMODE_CREATE ):
+//		{
+//			dwDesiredAccess			= GENERIC_WRITE;
+//			dwCreationDisposition	= OPEN_ALWAYS;
+//			break;
+//		}
+//
+//		case File::mMODE_CREATE:
+//		{
+//			dwDesiredAccess			= GENERIC_WRITE;
+//			dwCreationDisposition	= CREATE_NEW;
+//			break;
+//		}
+//
+//		case ( File::mMODE_READ | File::mMODE_WRITE ):
+//		{
+//			dwDesiredAccess	= GENERIC_READ | GENERIC_WRITE;
+//			dwCreationDisposition	= OPEN_EXISTING;
+//			break;
+//		}
+//
+//		default:
+//		{
+//			Dbg_Assert( 0 );
+//			return nullptr;
+//		}
+//	}
+//
+//	handle = CreateFile(	cardFilenameBuffer,							// file name
+//							dwDesiredAccess,							// access mode
+//							0,											// share mode
+//							nullptr,										// security attributes
+//							dwCreationDisposition,						// how to create
+//							FILE_ATTRIBUTE_NORMAL,						// file attributes and flags
+//							nullptr );				                        // handle to template file
+//
+//	if( handle != INVALID_HANDLE_VALUE )
+//	{
+//		p_file = new File( (int)handle, this );
+//
+//		WIN32_FILE_ATTRIBUTE_DATA file_attribute_data;
+//		if (GetFileAttributesEx(cardFilenameBuffer,GetFileExInfoStandard,&file_attribute_data))
+//		{
+////			Skate3 code, disabled for now.
+//#			if 0
+//			p_file->m_file_time=file_attribute_data.ftLastWriteTime;
+//#			endif
+//		}
+//
+//		return p_file;
+//	}
+//	else
+//	{
+//		if (GetLastError()==ERROR_DISK_FULL)
+//		{
+//			m_last_error=vINSUFFICIENT_SPACE;
+//		}
+//	}
 
 	return nullptr;
 }
@@ -876,19 +875,19 @@ bool Card::GetFileList( const char* mask, Lst::Head< File > &file_list )
 		new_file->m_Filename[strlen( new_file->m_Filename ) - 1] = 0;
 
 		wsprintfA( new_file->m_DisplayFilename, "%ls", find_data.szSaveGameName );
-		
+
 		FILETIME local_file_time;
 		FileTimeToLocalFileTime(&find_data.wfd.ftLastWriteTime,&local_file_time);
 		SYSTEMTIME system_file_time;
 		FileTimeToSystemTime(&local_file_time,&system_file_time);
-		
+
 		new_file->m_Modified.m_Year=system_file_time.wYear;
 		new_file->m_Modified.m_Month=system_file_time.wMonth;
 		new_file->m_Modified.m_Day=system_file_time.wDay;
 		new_file->m_Modified.m_Hour=system_file_time.wHour;
 		new_file->m_Modified.m_Minutes=system_file_time.wMinute;
 		new_file->m_Modified.m_Seconds=system_file_time.wSecond;
-		
+
 		new_file->m_Size	= find_data.wfd.nFileSizeLow;
 		new_file->m_Attribs	= 0;
 		file_list.AddToTail( new_file );
@@ -903,7 +902,7 @@ bool Card::GetFileList( const char* mask, Lst::Head< File > &file_list )
 File::File( int fd, Card* card ) : Lst::Node< File > ( this ), m_fd( fd ), m_card( card )
 {
 }
-		
+
 File::~File()
 {
 }
@@ -917,32 +916,34 @@ int File::Seek( int offset, FilePointerBase base )
 {
 	Dbg_Assert( m_fd != 0 );
 
-	DWORD dwMoveMethod;
+//	DWORD dwMoveMethod;
+//
+//	switch( base )
+//	{
+//		case BASE_START:
+//			dwMoveMethod = FILE_BEGIN;
+//			break;
+//		case BASE_CURRENT:
+//			dwMoveMethod = FILE_CURRENT;
+//			break;
+//		case BASE_END:
+//			dwMoveMethod = FILE_END;
+//			break;
+//		default:
+//			dwMoveMethod = FILE_END;
+//			Dbg_MsgAssert( 0,( "Invalid FilePointerBase\n" ));
+//			break;
+//	}
+//
+//
+//	DWORD result = SetFilePointer(	(HANDLE)m_fd,		// handle to file
+//									offset,				// bytes to move pointer
+//									nullptr,				// high-order bytes to move pointer
+//									dwMoveMethod );		// starting point
+//
+//	return result;
 
-	switch( base )
-	{
-		case BASE_START:
-			dwMoveMethod = FILE_BEGIN;
-			break;
-		case BASE_CURRENT:
-			dwMoveMethod = FILE_CURRENT;
-			break;
-		case BASE_END:
-			dwMoveMethod = FILE_END;
-			break;
-		default:
-			dwMoveMethod = FILE_END;
-			Dbg_MsgAssert( 0,( "Invalid FilePointerBase\n" ));
-			break;
-	}
-
-
-	DWORD result = SetFilePointer(	(HANDLE)m_fd,		// handle to file
-									offset,				// bytes to move pointer
-									nullptr,				// high-order bytes to move pointer
-									dwMoveMethod );		// starting point
-
-	return result;
+    return 0;
 }
 
 /******************************************************************/
@@ -952,13 +953,13 @@ int File::Seek( int offset, FilePointerBase base )
 
 bool File::Flush( void )
 {
-	Dbg_Assert( m_fd != 0 );
-
-	FlushFileBuffers((HANDLE)m_fd );
-
-	// The FlushFileBuffers() is pretty strict about what types of files wmay be flushed,
-	// whereas the PS2 equivalent doesn't really care. Just return a positive response always,
-	// no critical stuff predicated on this return anway.
+//	Dbg_Assert( m_fd != 0 );
+//
+//	FlushFileBuffers((HANDLE)m_fd );
+//
+//	// The FlushFileBuffers() is pretty strict about what types of files wmay be flushed,
+//	// whereas the PS2 equivalent doesn't really care. Just return a positive response always,
+//	// no critical stuff predicated on this return anway.
 	return true;
 }
 
@@ -969,36 +970,36 @@ bool File::Flush( void )
 
 int	File::Write( void* buffer, int len )
 {
-	Dbg_Assert( m_fd != 0 );
-
-//	Skate3 code, disabled for now.
-#	if 0
-	m_not_enough_space_to_write_file=false;
-#	endif
-
-	DWORD bytes_written;
-	BOOL rv = WriteFile(	(HANDLE)m_fd,		// handle to file
-							buffer,				// data buffer
-							len,				// number of bytes to write
-							&bytes_written,		// number of bytes written
-							nullptr );			// overlapped buffer
-							
-//	Skate3 code, disabled for now.
-#	if 0
-	if (rv==ERROR_NOT_ENOUGH_MEMORY)
-	{
-		m_not_enough_space_to_write_file=true;
-	}
-	if (GetLastError()==ERROR_DISK_FULL)
-	{
-		m_not_enough_space_to_write_file=true;
-	}
-#	endif
-		
-	if( rv )
-	{
-		return (int)bytes_written;
-	}
+//	Dbg_Assert( m_fd != 0 );
+//
+////	Skate3 code, disabled for now.
+//#	if 0
+//	m_not_enough_space_to_write_file=false;
+//#	endif
+//
+//	DWORD bytes_written;
+//	BOOL rv = WriteFile(	(HANDLE)m_fd,		// handle to file
+//							buffer,				// data buffer
+//							len,				// number of bytes to write
+//							&bytes_written,		// number of bytes written
+//							nullptr );			// overlapped buffer
+//
+////	Skate3 code, disabled for now.
+//#	if 0
+//	if (rv==ERROR_NOT_ENOUGH_MEMORY)
+//	{
+//		m_not_enough_space_to_write_file=true;
+//	}
+//	if (GetLastError()==ERROR_DISK_FULL)
+//	{
+//		m_not_enough_space_to_write_file=true;
+//	}
+//#	endif
+//
+//	if( rv )
+//	{
+//		return (int)bytes_written;
+//	}
 
 	return 0;
 }
@@ -1012,18 +1013,18 @@ int	File::Write( void* buffer, int len )
 
 int	File::Read( void* buff, int len )
 {
-	Dbg_Assert( m_fd != 0 );
-
-	DWORD bytes_read;
-	BOOL rv = ReadFile(	(HANDLE)m_fd,			// handle to file
-						buff,					// data buffer
-						len,					// number of bytes to read
-						&bytes_read,			// number of bytes read
-						nullptr );					// overlapped buffer
-	if( rv )
-	{
-		return (int)bytes_read;
-	}
+//	Dbg_Assert( m_fd != 0 );
+//
+//	DWORD bytes_read;
+//	BOOL rv = ReadFile(	(HANDLE)m_fd,			// handle to file
+//						buff,					// data buffer
+//						len,					// number of bytes to read
+//						&bytes_read,			// number of bytes read
+//						nullptr );					// overlapped buffer
+//	if( rv )
+//	{
+//		return (int)bytes_read;
+//	}
 
 	return 0;
 }
@@ -1037,9 +1038,9 @@ int	File::Read( void* buff, int len )
 
 bool File::Close( void )
 {
-	Dbg_Assert( m_fd != 0 );
-
-	return CloseHandle((HANDLE)m_fd );
+//	Dbg_Assert( m_fd != 0 );
+//
+//	return CloseHandle((HANDLE)m_fd );
 }
 
 /******************************************************************/
