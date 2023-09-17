@@ -39,4 +39,4 @@ jobs:
         with:
           name: Windows
           path: |
-            build/TonyRE.exe
+            *
