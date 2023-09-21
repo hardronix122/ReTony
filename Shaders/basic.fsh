@@ -64,9 +64,13 @@ void main()
 		    } else {
 		        accum = vec4(1, 0, 0, 1);
 		    }
+
+            if(u_active_blend > -1) {
+                if(int(blend_mode) == u_active_blend) {
+                    accum = vec4(0, 1, 0, 1);
+                }
+            }
 		}
-
-
 	}
 	o_col = accum;
 }

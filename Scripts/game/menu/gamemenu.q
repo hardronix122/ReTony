@@ -2230,7 +2230,8 @@ SCRIPT create_debug_menu
 	} 
 	set_theme_icons
 	make_text_sub_menu_item text = "Flush Shader Cache" id = menu_flush_shader_cache pad_choose_script = flush_shader_cache
-	make_text_sub_menu_item text = "Auto Rail Level" id = menu_autoraillevel pad_choose_script = autorail_level 
+	make_text_sub_menu_item text = "Scroll Active Blend Mode" id = menu_scroll_active_blend_mode pad_choose_script = scroll_active_blend_mode
+	make_text_sub_menu_item text = "Auto Rail Level" id = menu_autoraillevel pad_choose_script = autorail_level
 	make_text_sub_menu_item text = "Time Of Day" id = menu_timeofday pad_choose_script = launch_timeofday_menu 
 	make_text_sub_menu_item text = "Lighting Tool" id = menu_lighting pad_choose_script = launch_lighting_tool 
 	make_text_sub_menu_item text = "Set Pro Skater" id = menu_set_pro_skater pad_choose_script = create_set_pro_skater_menu 
@@ -2304,6 +2305,38 @@ ENDSCRIPT
 
 SCRIPT flush_shader_cache
     FlushShaderCache
+ENDSCRIPT
+
+SCRIPT scroll_active_blend_mode
+    ScrollActiveBlendMode
+    GetActiveBlendMode
+
+    IF ObjectExists id = blend_mode_text
+        DestroyScreenElement id = blend_mode_text
+    ENDIF
+
+    IF ( <active_blend_mode> > -1 )
+        SetScreenElementLock id = root_window off
+
+        CreateScreenElement {
+    	    type = TextElement
+    	    parent = root_window
+    	    id = blend_mode_text
+    	    pos = PAIR(0.50000000000, 10.00000000000)
+    	    text = "Blend Mode: Unknown"
+    	    font = dialog
+    	    rgba = [ 224 17 95 100 ]
+    	    just = [ left center ]
+    	    scale = 0.80000001192
+        }
+
+        SetScreenElementLock id = root_window on
+
+        GetActiveBlendModeName
+
+        FormatText TextName = blend_mode "Blend mode: %s" s = <active_blend_mode_name>
+        SetScreenElementProps id = blend_mode_text text = <blend_mode>
+    ENDIF
 ENDSCRIPT
 
 SCRIPT autorail_level 

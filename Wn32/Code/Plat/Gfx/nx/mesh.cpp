@@ -12,6 +12,7 @@
 #include "render.h"
 #include "billboard.h"
 #include "shader.h"
+#include <Gfx/gfxman.h>
 
 namespace NxWn32
 {
@@ -694,6 +695,8 @@ void sMesh::Submit( void )
     // Pass blend modes to the shaders, as well as max passes
     glUniform1ui(glGetUniformLocation(shader->program, "u_max_passes"), MAX_PASSES);
     glUniform1uiv(glGetUniformLocation(shader->program, "u_reg_alpha"), MAX_PASSES, reinterpret_cast<const GLuint *>(mp_material->m_reg_alpha));
+
+    glUniform1i(glGetUniformLocation(shader->program, "u_active_blend"), Gfx::Manager::Instance()->GetActiveBlendMode());
 
 	glBindVertexArray(mp_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, mp_vbo);

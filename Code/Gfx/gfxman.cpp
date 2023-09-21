@@ -172,7 +172,7 @@ Manager::Manager ( void )
 
 	m_metrics_active = false;
 	m_vram_viewer_active = false;
-
+    m_active_blend = -1;
 }
 
 /******************************************************************/
@@ -244,6 +244,24 @@ void	Manager::AssertFlush( void )
 {
 // not needed...	
 
+}
+
+void Manager::ScrollActiveBlendMode() {
+    m_active_blend++;
+
+    if(m_active_blend > 17) {
+        m_active_blend = -1;
+    } else if(m_active_blend > 15) {
+        m_active_blend = 17;
+    } else if(m_active_blend > 13) {
+        m_active_blend = 15;
+    }
+
+    printf("Active blend mode: %d\n", m_active_blend);
+}
+
+int Manager::GetActiveBlendMode() {
+    return m_active_blend;
 }
 
 /******************************************************************/

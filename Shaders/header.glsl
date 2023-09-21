@@ -34,6 +34,7 @@ const uint BLEND_MODE_BLEND_INVERSE_PREVIOUS_MASK = 13u;
 
 uniform uint u_passes;
 uniform uint u_max_passes;
+uniform int u_active_blend;
 
 uniform uint[4] u_reg_alpha;
 

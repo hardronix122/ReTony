@@ -15456,6 +15456,88 @@ bool ScriptFlushShaderCache(Script::CStruct *pParams, Script::CScript *pScript) 
     return true;
 }
 
+bool ScriptScrollActiveBlendMode(Script::CStruct *pParams, Script::CScript *pScript) {
+    (void) pParams;
+    (void) pScript;
+
+    Gfx::Manager::Instance()->ScrollActiveBlendMode();
+
+    return true;
+}
+
+bool ScriptGetActiveBlendMode(Script::CStruct *pParams, Script::CScript *pScript) {
+    (void) pParams;
+    (void) pScript;
+
+    pScript->GetParams()->AddInteger("active_blend_mode", Gfx::Manager::Instance()->GetActiveBlendMode());
+
+    return true;
+}
+
+bool ScriptGetActiveBlendModeName(Script::CStruct *pParams, Script::CScript *pScript) {
+    (void) pParams;
+    (void) pScript;
+
+    std::string name;
+
+    switch(Gfx::Manager::Instance()->GetActiveBlendMode()) {
+        case 0:
+            name = "Diffuse";
+            break;
+        case 1:
+            name = "Add";
+            break;
+        case 2:
+            name = "Add / Fixed";
+            break;
+        case 3:
+            name = "Subtract";
+            break;
+        case 4:
+            name = "Subtract / Fixed";
+            break;
+        case 5:
+            name = "Blend";
+            break;
+        case 6:
+            name = "Blend / Fixed";
+            break;
+        case 7:
+            name = "Modulate";
+            break;
+        case 8:
+            name = "Modulate / Fixed";
+            break;
+        case 9:
+            name = "Brighten";
+            break;
+        case 10:
+            name = "Brighten / Fixed";
+            break;
+        case 11:
+            name = "Gloss Map";
+            break;
+        case 12:
+            name = "Blend Previous Mask";
+            break;
+        case 13:
+            name = "Blend Previous Mask / Inversed";
+            break;
+        case 15:
+            name = "Modulate Color";
+            break;
+        case 17:
+            name = "One Invert Source Alpha";
+            break;
+        default:
+            name = "Unknown";
+    }
+
+    pScript->GetParams()->AddString("active_blend_mode_name", name.c_str());
+
+    return true;
+}
+
 /******************************************************************/
 /*                                                                */
 /*                                                                */
