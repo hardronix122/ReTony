@@ -663,9 +663,34 @@ void sMesh::Submit( void )
 			// Bind texture
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, mp_material->mp_tex[i]->GLTexture);
+
+			uint32 uv_addressing = mp_material->m_uv_addressing[i];
+			GLenum uv_space = GL_TEXTURE_WRAP_S;
+			for (int i = 0; i < 2; i++)
+			{
+				switch (uv_addressing & 0xFFFF)
+				{
+					case 0:
+						// Wrap
+						glTexParameteri(GL_TEXTURE_2D, uv_space, GL_REPEAT);
+						break;
+					case 1:
+						// Clamp
+						glTexParameteri(GL_TEXTURE_2D, uv_space, GL_CLAMP_TO_EDGE);
+						break;
+					case 2:
+						// Border
+						glTexParameteri(GL_TEXTURE_2D, uv_space, GL_CLAMP_TO_BORDER);
+						break;
+				}
+				uv_addressing >>= 16;
+				uv_space = GL_TEXTURE_WRAP_T;
+			}
 		}
+
 		if (mp_material->m_flags[i] & MATFLAG_ENVIRONMENT)
 		{
+			// Send environment map matrix
 			static glm::mat4 env_mat = {
 				0.5f, 0.0f, 0.0f, 0.0f,
 				0.0f, -0.5f, 0.0f, 0.0f,
@@ -679,6 +704,10 @@ void sMesh::Submit( void )
 			sprintf(uniform_name, "u_env_mat[%u]", i);
 			glUniformMatrix4fv(glGetUniformLocation(shader->program, uniform_name), 1, GL_FALSE, &env_mat[0][0]);
 		}
+
+		// Send blend mode
+		sprintf(uniform_name, "u_blend[%u]", i);
+		glUniform1ui(glGetUniformLocation(shader->program, uniform_name), mp_material->m_reg_alpha[i] & sMaterial::BLEND_MODE_MASK);
 	}
 
 	// Send MVP matrix
@@ -687,10 +716,153 @@ void sMesh::Submit( void )
 	glUniformMatrix4fv(glGetUniformLocation(shader->program, "u_p"), 1, GL_FALSE, &EngineGlobals.projection_matrix[0][0]);
 
 	if (m_flags & MESH_FLAG_MATERIAL_COLOR_OVERRIDE)
-		glUniform3fv(glGetUniformLocation(shader->program, "u_col"), 1, &m_material_color_override[0]);
+	{
+		// Send overridden colors
+		for (uint32 i = 0; i < mp_material->m_passes; i++)
+		{
+			sprintf(uniform_name, "u_col[%u]", i);
+			glUniform4f(glGetUniformLocation(shader->program, uniform_name), m_material_color_override[0], m_material_color_override[1], m_material_color_override[2], mp_material->m_color[i][3]);
+		}
+	}
 	else
-		glUniform3f(glGetUniformLocation(shader->program, "u_col"), 1.0f, 1.0f, 1.0f);
+	{
+		// Send material colors
+		glUniform4fv(glGetUniformLocation(shader->program, "u_col"), mp_material->m_passes, mp_material->m_color[0]);
+	}
 
+	// Setup blend mode
+	GLenum blend_op;
+	GLenum src_blend;
+	GLenum dst_blend;
+	float fixed_alpha = (mp_material->m_reg_alpha[0] >> 24) / 128.0f;
+
+	switch (mp_material->m_reg_alpha[0] & sMaterial::BLEND_MODE_MASK)
+	{
+		case vBLEND_MODE_DIFFUSE:
+		{
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_ONE;
+			dst_blend = GL_ZERO;
+			break;
+		}
+		case vBLEND_MODE_ADD:
+		{
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_SRC_ALPHA;
+			dst_blend = GL_ONE;
+			break;
+		}
+		case vBLEND_MODE_ADD_FIXED:
+		{
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_CONSTANT_ALPHA;
+			dst_blend = GL_ONE;
+			break;
+		}
+		case vBLEND_MODE_SUBTRACT:
+		{
+			blend_op = GL_FUNC_REVERSE_SUBTRACT;
+			src_blend = GL_SRC_ALPHA;
+			dst_blend = GL_ONE;
+			break;
+		}
+		case vBLEND_MODE_SUB_FIXED:
+		{
+			blend_op = GL_FUNC_REVERSE_SUBTRACT;
+			src_blend = GL_CONSTANT_ALPHA;
+			dst_blend = GL_ONE;
+			break;
+		}
+		case vBLEND_MODE_BLEND:
+		{
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_SRC_ALPHA;
+			dst_blend = GL_ONE_MINUS_SRC_ALPHA;
+			break;
+		}
+		case vBLEND_MODE_BLEND_FIXED:
+		{
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_CONSTANT_ALPHA;
+			dst_blend = GL_ONE_MINUS_CONSTANT_ALPHA;
+			break;
+		}
+		case vBLEND_MODE_MODULATE:
+		{
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_ZERO;
+			dst_blend = GL_SRC_ALPHA;
+			break;
+		}
+		case vBLEND_MODE_MODULATE_FIXED:
+		{
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_ZERO;
+			dst_blend = GL_CONSTANT_ALPHA;
+			break;
+		}
+		case vBLEND_MODE_BRIGHTEN:
+		{
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_DST_COLOR;
+			dst_blend = GL_ONE;
+			break;
+		}
+		case vBLEND_MODE_BRIGHTEN_FIXED:
+		{
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_DST_COLOR;
+			dst_blend = GL_CONSTANT_ALPHA;
+			break;
+		}
+		case vBLEND_MODE_GLOSS_MAP:
+		{
+			// Treat as diffuse for now.
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_ONE;
+			dst_blend = GL_ZERO;
+			break;
+		}
+		case vBLEND_MODE_BLEND_PREVIOUS_MASK:
+		{
+			// Meaningless unless destination alpha is enabled.
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_DST_ALPHA;
+			dst_blend = GL_ONE_MINUS_DST_ALPHA;
+			break;
+		}
+		case vBLEND_MODE_BLEND_INVERSE_PREVIOUS_MASK:
+		{
+			// Meaningless unless destination alpha is enabled.
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_ONE_MINUS_DST_ALPHA;
+			dst_blend = GL_DST_ALPHA;
+			break;
+		}
+		case vBLEND_MODE_ONE_INV_SRC_ALPHA:
+		{
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_ONE;
+			dst_blend = GL_ONE_MINUS_SRC_ALPHA;
+			break;
+		}
+		default:
+		{
+			Dbg_Assert(0);
+			blend_op = GL_FUNC_ADD;
+			src_blend = GL_ONE;
+			dst_blend = GL_ZERO;
+			break;
+		}
+	}
+
+	// Set blend mode
+	glEnable(GL_BLEND);
+	glBlendEquation(blend_op);
+	glBlendFunc(src_blend, dst_blend);
+	glBlendColor(fixed_alpha, fixed_alpha, fixed_alpha, fixed_alpha);
+
+	// Draw mesh
 	glBindVertexArray(mp_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, mp_vbo);
 
@@ -963,7 +1135,7 @@ void sMesh::SetupVAO(void)
 	}
 	if (m_diffuse_offset != nullptr)
 	{
-		glVertexAttribPointer(4, 4, GL_UNSIGNED_BYTE, GL_TRUE, m_vertex_stride, (void*)m_diffuse_offset);
+		glVertexAttribPointer(4, GL_BGRA, GL_UNSIGNED_BYTE, GL_TRUE, m_vertex_stride, (void*)m_diffuse_offset);
 		glEnableVertexAttribArray(4);
 	}
 	for (uint32 i = 0; i < MAX_PASSES; i++)
