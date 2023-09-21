@@ -18,7 +18,6 @@
 #include <unistd.h>
 #endif
 
-#include <fstream>
 #include <unordered_map>
 
 // NOTE: The filesystem indexing has a significant impact on startup time
@@ -135,19 +134,6 @@ namespace File
 		static std::filesystem::path data_path = GetDataPath();
 		return data_path;
 	}
-
-	// File handle
-	struct sFileHandle
-	{
-		std::ifstream file;
-		size_t filesize = 0;
-
-		sFileHandle(const std::filesystem::path &path) : file(path, std::ios::binary)
-		{
-			if (file.is_open())
-				filesize = (size_t)std::filesystem::file_size(path);
-		}
-	};
 
 	static void *prefopen(const char *filename, const char *mode)
 	{
@@ -354,6 +340,18 @@ namespace File
 	{
 		return Read( addr, 4, 1, pFP );
 	}
+
+    size_t ReadAllText( std::string* text, void* pFP) {
+        std::stringstream ss;
+
+        auto *h_file = (sFileHandle*)pFP;
+        ss << h_file->file.rdbuf();
+
+        std::string t = ss.str();
+        *text = t;
+
+        return (size_t) h_file->file.gcount();
+    }
 
 	size_t Write( const void *addr, size_t size, size_t count, void *pFP )
 	{
