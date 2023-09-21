@@ -92,6 +92,13 @@ namespace NxWn32
 	}
 
     sShader *sShader::load_from_filesystem(const std::string& id, const std::filesystem::path& vertex_filename, const std::filesystem::path& fragment_filename) {
+        if(shader_cache.contains(id)) {
+            CachedShader cached_shader = shader_cache[id];
+            return cached_shader.shader;
+        }
+
+        printf("Loading shader %s (%s/%s) from the filesystem...\n", id.c_str(), vertex_filename.c_str(), fragment_filename.c_str());
+
         std::string vertex_source, fragment_source;
         std::filesystem::path vertex_filepath = BASE_DIRECTORY / vertex_filename;
         std::filesystem::path fragment_filepath = BASE_DIRECTORY / fragment_filename;
@@ -104,13 +111,6 @@ namespace NxWn32
 
         File::Close(vertex_file);
         File::Close(fragment_file);
-
-        if(shader_cache.contains(id)) {
-            CachedShader cached_shader = shader_cache[id];
-            return cached_shader.shader;
-        }
-
-        printf("Loading shader %s (%s/%s) from the filesystem...\n", id.c_str(), vertex_filename.c_str(), fragment_filename.c_str());
 
         CachedShader cached_shader(vertex_source, fragment_source);
         auto* shader = new sShader(vertex_source.c_str(), fragment_source.c_str());
