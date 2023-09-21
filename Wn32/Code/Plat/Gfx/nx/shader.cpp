@@ -4,6 +4,8 @@
 
 namespace NxWn32
 {
+    std::unordered_map<std::string, CachedShader> sShader::shader_cache;
+
 	// Shader compile
 	static GLuint CompileSource(GLenum type, const char *src)
 	{
@@ -33,8 +35,8 @@ namespace NxWn32
 	{
         std::string header;
 
-        if(shader_cache.contains("header")) {
-            header = shader_cache["header"].fragment_source;
+        if(sShader::shader_cache.contains("header")) {
+            header = sShader::shader_cache["header"].fragment_source;
         } else {
             std::filesystem::path header_filepath = BASE_DIRECTORY / "header.glsl";
 
@@ -42,7 +44,7 @@ namespace NxWn32
             File::ReadAllText(&header, header_file);
             File::Close(header_file);
 
-            shader_cache["header"] = CachedShader("", header);
+            sShader::shader_cache["header"] = CachedShader("", header);
         }
 
         std::string full_vertex_shader = header + vertex;
@@ -92,8 +94,8 @@ namespace NxWn32
 	}
 
     sShader *sShader::load_from_filesystem(const std::string& id, const std::filesystem::path& vertex_filename, const std::filesystem::path& fragment_filename) {
-        if(shader_cache.contains(id)) {
-            CachedShader cached_shader = shader_cache[id];
+        if(sShader::shader_cache.contains(id)) {
+            CachedShader cached_shader = sShader::shader_cache[id];
             return cached_shader.shader;
         }
 
@@ -116,7 +118,7 @@ namespace NxWn32
         auto* shader = new sShader(vertex_source.c_str(), fragment_source.c_str());
         cached_shader.shader = shader;
 
-        shader_cache[id] = cached_shader;
+        sShader::shader_cache[id] = cached_shader;
         return shader;
     }
 

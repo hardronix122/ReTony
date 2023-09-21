@@ -2228,7 +2228,8 @@ SCRIPT create_debug_menu
 			{ pad_back generic_menu_pad_back params = { callback = create_pause_menu } } 
 		] 
 	} 
-	set_theme_icons 
+	set_theme_icons
+	make_text_sub_menu_item text = "Flush Shader Cache" id = menu_flush_shader_cache pad_choose_script = flush_shader_cache
 	make_text_sub_menu_item text = "Auto Rail Level" id = menu_autoraillevel pad_choose_script = autorail_level 
 	make_text_sub_menu_item text = "Time Of Day" id = menu_timeofday pad_choose_script = launch_timeofday_menu 
 	make_text_sub_menu_item text = "Lighting Tool" id = menu_lighting pad_choose_script = launch_lighting_tool 
@@ -2299,6 +2300,10 @@ SCRIPT create_test_menu
 	ENDIF 
 	make_text_sub_menu_item text = "Done" id = menu_done pad_choose_script = create_pause_menu 
 	RunScriptOnScreenElement id = current_menu_anchor animate_in params = { final_pos = PAIR(320.00000000000, 134.00000000000) } 
+ENDSCRIPT
+
+SCRIPT flush_shader_cache
+    FlushShaderCache
 ENDSCRIPT
 
 SCRIPT autorail_level 

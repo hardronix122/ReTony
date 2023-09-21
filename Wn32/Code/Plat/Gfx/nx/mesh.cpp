@@ -691,6 +691,10 @@ void sMesh::Submit( void )
 	else
 		glUniform3f(glGetUniformLocation(shader->program, "u_col"), 1.0f, 1.0f, 1.0f);
 
+    // Pass blend modes to the shaders, as well as max passes
+    glUniform1ui(glGetUniformLocation(shader->program, "u_max_passes"), MAX_PASSES);
+    glUniform1uiv(glGetUniformLocation(shader->program, "u_reg_alpha"), MAX_PASSES, reinterpret_cast<const GLuint *>(mp_material->m_reg_alpha));
+
 	glBindVertexArray(mp_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, mp_vbo);
 

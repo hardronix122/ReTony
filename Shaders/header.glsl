@@ -16,7 +16,27 @@ const uint MATFLAG_EXPLICIT_UV_WIBBLE = (1u<<14u); // Uses explicit uv wibble (s
 const uint MATFLAG_WATER_EFFECT = (1u<<27u); // This material should be processed to provide the water effect.
 const uint MATFLAG_NO_MAT_COL_MOD = (1u<<28u); // No material color modulation required (all passes have m.rgb = 0.5).
 
+const uint BLEND_MODE_DIFFUSE = 0u;
+const uint BLEND_MODE_ADD = 1u;
+const uint BLEND_MODE_ADD_FIXED = 2u;
+const uint BLEND_MODE_SUBTRACT = 3u;
+const uint BLEND_MODE_SUBTRACT_FIXED = 4u;
+const uint BLEND_MODE_BLEND = 5u;
+const uint BLEND_MODE_BLEND_FIXED = 6u;
+const uint BLEND_MODE_MODULATE = 7u;
+const uint BLEND_MODE_MODULATE_FIXED = 8u;
+const uint BLEND_MODE_BRIGHTEN = 9u;
+const uint BLEND_MODE_BRIGHTEN_FIXED = 10u;
+const uint BLEND_MODE_GLOSS_MAP = 11u;
+const uint BLEND_MODE_BLEND_PREVIOUS_MASK = 12u;
+const uint BLEND_MODE_BLEND_INVERSE_PREVIOUS_MASK = 13u;
+
+
 uniform uint u_passes;
+uniform uint u_max_passes;
+
+uniform uint[4] u_reg_alpha;
+
 uniform uvec4 u_pass_flag;
 
 uniform uint u_ignore_bf;

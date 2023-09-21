@@ -573,6 +573,8 @@ bool ScriptSkaterIsCustom(Script::CStruct *pParams, Script::CScript *pScript);
 
 bool ScriptQuitGame(Script::CStruct *pParams, Script::CScript *pScript);
 
+bool ScriptFlushShaderCache(Script::CStruct *pParams, Script::CScript *pScript);
+
 /*****************************************************************************
 **								Inline Functions							**
 *****************************************************************************/

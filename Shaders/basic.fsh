@@ -28,7 +28,45 @@ void main()
 				texel *= texture(u_texture[3], f_uv[i]);
 		}
 
-		accum += texel;
+		if(i <= u_max_passes) {
+			uint blend_mode = (uint(0xFFFFFF) & u_reg_alpha[i]);
+            uint fixed_alpha_int = (uint(0x000000FF) & u_reg_alpha[i]);
+            float fixed_alpha = fixed_alpha_int / 128.0f;
+
+		    if(blend_mode == BLEND_MODE_DIFFUSE) {
+		        accum = texel;
+		    } else if(blend_mode == BLEND_MODE_ADD) {
+		        accum = texel * texel + accum;
+		    } else if(blend_mode == BLEND_MODE_ADD_FIXED) {
+		        accum = texel * fixed_alpha + accum;
+		    } else if(blend_mode == BLEND_MODE_SUBTRACT) {
+		    	accum = texel * texel + accum;
+		    } else if(blend_mode == BLEND_MODE_SUBTRACT_FIXED) {
+                accum = texel * fixed_alpha + accum;
+		    } else if(blend_mode == BLEND_MODE_BLEND) {
+		        accum = mix(accum, texel, texel.a);
+		    } else if(blend_mode == BLEND_MODE_BLEND_FIXED) {
+                accum = mix(accum, texel, fixed_alpha);
+		    } else if(blend_mode == BLEND_MODE_MODULATE) {
+		        accum = accum * texel;
+		    } else if(blend_mode == BLEND_MODE_MODULATE_FIXED) {
+		        accum = accum * fixed_alpha;
+		    } else if(blend_mode == BLEND_MODE_BRIGHTEN) {
+		        accum = accum * texel + accum;
+		    } else if(blend_mode == BLEND_MODE_BRIGHTEN_FIXED) {
+		        accum = accum * fixed_alpha + accum;
+		    } else if(blend_mode == BLEND_MODE_GLOSS_MAP) {
+		        accum = vec4(1, 0, 1, 1);
+		    } else if(blend_mode == BLEND_MODE_BLEND_PREVIOUS_MASK) {
+		        accum = (texel - accum) * accum + accum;
+		    } else if(blend_mode == BLEND_MODE_BLEND_INVERSE_PREVIOUS_MASK) {
+                accum = (accum - texel) * accum + texel;
+		    } else {
+		        accum = vec4(1, 0, 0, 1);
+		    }
+		}
+
+
 	}
 	o_col = accum;
 }

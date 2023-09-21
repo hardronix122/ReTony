@@ -60,6 +60,7 @@
 #include <Gfx/NxViewMan.h>
 #include <Gfx/NxMiscFX.h>
 #include <Gfx/NxGeom.h>
+#include <Plat/Gfx/nx/shader.h>
 
 #include <Gel/modman.h>
 #include <Gel/mainloop.h>
@@ -4048,7 +4049,7 @@ bool ScriptPlaySfx(Script::CStruct *pParams, Script::CScript *pScript)
 	if( !sfx_manager->PlaySfx( SoundChecksum, &vol, Pitch, id ))
 	{
 #ifdef __NOPT_ASSERT__
-		printf( "failed to play sound %s", Script::FindChecksumName( SoundChecksum ) );
+		printf( "failed to play sound %s\n", Script::FindChecksumName( SoundChecksum ) );
 #endif	
 	}
 	return true;
@@ -15445,6 +15446,15 @@ bool ScriptQuitGame(Script::CStruct *pParams, Script::CScript *pScript) {
     return true;
 }
 
+bool ScriptFlushShaderCache(Script::CStruct *pParams, Script::CScript *pScript) {
+    (void) pParams;
+    (void) pScript;
+
+    printf("Flushing shader cache...\n");
+    NxWn32::sShader::shader_cache.clear();
+
+    return true;
+}
 
 /******************************************************************/
 /*                                                                */

@@ -1450,6 +1450,7 @@ SCFunction CFunctionLookupTable[]=
 
 	{ "SkaterIsCustom", CFuncs::ScriptSkaterIsCustom },
     { "QuitGame", CFuncs::ScriptQuitGame },
+    { "FlushShaderCache", CFuncs::ScriptFlushShaderCache }
 };
 
 // A list of all the member function names accessible from scripts.
