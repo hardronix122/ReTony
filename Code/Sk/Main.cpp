@@ -514,7 +514,7 @@ int main ( sint argc, char** argv )
 			General startup section
 			************************************************/
 			
-			Mem::PoolManager::SSetupPool(Mem::PoolManager::vHASH_ITEM_POOL, 12500);	// Mick: increased from 5600 to 10000
+			Mem::PoolManager::SSetupPool(Mem::PoolManager::vHASH_ITEM_POOL, 52500);
 
 				
 			// I'd prefer for this stuff to happen after the singleton section,
