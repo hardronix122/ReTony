@@ -344,6 +344,10 @@ namespace File
     size_t ReadAllText( std::string* text, void* pFP) {
         std::stringstream ss;
 
+        if(pFP == nullptr) {
+            return 0;
+        }
+
         auto *h_file = (sFileHandle*)pFP;
         ss << h_file->file.rdbuf();
 

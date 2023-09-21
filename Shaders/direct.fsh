@@ -1,3 +1,4 @@
+#version 330 core
 in vec2 f_uv;
 
 layout (location = 0) out vec4 o_col;

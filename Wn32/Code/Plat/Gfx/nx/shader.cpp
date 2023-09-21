@@ -33,27 +33,11 @@ namespace NxWn32
 
 	sShader::sShader(const char *vertex, const char *fragment)
 	{
-        std::string header;
-
-        if(sShader::shader_cache.contains("header")) {
-            header = sShader::shader_cache["header"].fragment_source;
-        } else {
-            std::filesystem::path header_filepath = BASE_DIRECTORY / "header.glsl";
-
-            auto *header_file = (File::sFileHandle*) File::Open(header_filepath.c_str(), "r");
-            File::ReadAllText(&header, header_file);
-            File::Close(header_file);
-
-            sShader::shader_cache["header"] = CachedShader("", header);
-        }
-
-        std::string full_vertex_shader = header + vertex;
-        std::string full_fragment_shader = header + fragment;
 
 
         // Compile shaders
-		GLuint vertex_shader = CompileSource(GL_VERTEX_SHADER, full_vertex_shader.c_str());
-		GLuint fragment_shader = CompileSource(GL_FRAGMENT_SHADER, full_fragment_shader.c_str());
+		GLuint vertex_shader = CompileSource(GL_VERTEX_SHADER, vertex);
+		GLuint fragment_shader = CompileSource(GL_FRAGMENT_SHADER, fragment);
 
 		// Create program
 		program = glCreateProgram();

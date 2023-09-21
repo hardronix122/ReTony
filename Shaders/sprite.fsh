@@ -1,3 +1,4 @@
+#version 330 core
 in vec2 f_uv;
 in vec4 f_col;
 
