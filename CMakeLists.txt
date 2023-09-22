@@ -1038,6 +1038,9 @@ endif()
 # Include miniaudio
 target_include_directories(TonyRE.Common INTERFACE "External/miniaudio")
 
+# Include asio
+target_include_directories(TonyRE.Common INTERFACE "External/asio/asio/include")
+
 # Compile GameSpy SDK
 add_subdirectory("GameSpy" EXCLUDE_FROM_ALL)
 target_link_libraries(TonyRE.Code PUBLIC GameSpy)

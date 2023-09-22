@@ -13,3 +13,9 @@
 [submodule "QScript"]
 	path = QScript
 	url = https://github.com/cuckydev/QScript
+[submodule "External/asio"]
+	path = External/asio
+	url = https://github.com/chriskohlhoff/asio.git
+[submodule "External/boost"]
+	path = External/boost
+	url = https://github.com/boostorg/boost.git
