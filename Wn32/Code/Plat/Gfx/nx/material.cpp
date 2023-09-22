@@ -52,6 +52,12 @@ sMaterial::sMaterial( void )
 /******************************************************************/
 sMaterial::~sMaterial( void )
 {
+    for(size_t i = 0; i < MAX_PASSES; i++){
+        if(mp_UVWibbleParams[i] != nullptr) {
+            free(mp_UVWibbleParams[i]);
+        }
+    }
+
 	/*
 	if( mp_wibble_vc_params	)
 	{

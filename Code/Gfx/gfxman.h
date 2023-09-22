@@ -69,7 +69,8 @@ public :
 
 //	static 	Image::RGBA				sBackgroundColor; 
 
-
+    void                        ScrollActiveBlendMode();
+    int                         GetActiveBlendMode();
 	void						ToggleMetrics( void );
 	void						ToggleVRAMViewer( void );
 	void						DumpVRAMUsage( void );
@@ -115,6 +116,9 @@ private :
 	bool						m_metrics_active;
 	bool						m_vram_viewer_active;
 	bool						m_trivial_far_z_clip;
+
+// Debug*
+    int                         m_active_blend;
 
 
 	uint32						m_min_vblank_wait;
