@@ -848,7 +848,7 @@ namespace Nx
                 // Map the VBO
                 glBindBuffer(GL_ARRAY_BUFFER, p_mesh->mp_vbo);
                 char *p_vbo = (char *)glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY) + (uintptr_t)p_mesh->m_diffuse_offset;
-
+              
                 // Copy over every vertex position in this mesh.
                 for (uint32 v = 0; v < p_mesh->m_num_vertices; ++v)
                 {
@@ -941,24 +941,23 @@ namespace Nx
                 glBindBuffer(GL_ARRAY_BUFFER, p_mesh->mp_vbo);
                 char *p_vbo = (char*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY) + (uintptr_t)p_mesh->m_diffuse_offset;
 
-                // Copy over every vertex position in this mesh.
-                for (uint32 v = 0; v < p_mesh->m_num_vertices; ++v)
-                {
-                    Image::RGBA *rgba = (Image::RGBA*)p_vbo;
-                    *rgba = *p_colors++;
-                    uint8 temp = rgba->r;
-                    rgba->r = rgba->b;
-                    rgba->b = temp;
+			// Copy over every vertex position in this mesh.
+			for (uint32 v = 0; v < p_mesh->m_num_vertices; ++v)
+			{
+				Image::RGBA *rgba = (Image::RGBA*)p_vbo;
+				*rgba = *p_colors++;
+				uint8 temp = rgba->r;
+				rgba->r = rgba->b;
+				rgba->b = temp;
 
-                    p_vbo += p_mesh->m_vertex_stride;
-                }
+         p_vbo += p_mesh->m_vertex_stride;
+       }
 
-                // Unmap the VBO
-                glUnmapBuffer(GL_ARRAY_BUFFER);
-            }
-        }
-    }
-
+       // Unmap the VBO
+       glUnmapBuffer(GL_ARRAY_BUFFER);
+     }
+  }
+}
 
 
 /******************************************************************/

@@ -1,11 +1,15 @@
 #include "shader.h"
 
+#include "render.h"
+#include "material.h"
+
 #include <string>
+#include <unordered_set>
 
 namespace NxWn32
 {
-    std::unordered_map<std::string, CachedShader> sShader::shader_cache;
-
+  std::unordered_map<std::string, CachedShader> sShader::shader_cache;
+  
 	// Shader compile
 	static GLuint CompileSource(GLenum type, const char *src)
 	{
