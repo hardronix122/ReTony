@@ -1769,5 +1769,3 @@ void sMesh::DrawBoundingSphere( void )
 
 
 } // namespace NxWn32
-
-
