@@ -643,8 +643,10 @@ bool ScriptWait(Script::CStruct *pParams, Script::CScript *pScript)
 
 	if (pParams->ContainsFlag(0x4a07c332/*"frame"*/) || pParams->ContainsFlag(0x19176c5/*"frames"*/))
 	{
-		pScript->Wait((int)Period);
-		// pScript->WaitTime((int)(Period * 1000.0f / 60.0f)); // This should NOT be changed for PAL, as Tmr::GetTime accounts for PAL
+		if ((int)Period == 1)
+			pScript->Wait((int)Period);
+		else
+			pScript->WaitTime((int)(Period * 1000.0f / 60.0f)); // This should NOT be changed for PAL, as Tmr::GetTime accounts for PAL
 		return true;
 	}		
 
@@ -10162,21 +10164,6 @@ bool ScriptJoinServer(Script::CStruct *pParams, Script::CScript *pScript )
 		Dbg_Printf( "**** SETTING MAX PLAYERS TO %d\n", max_players );
 		Dbg_Assert( skate_mod->GetGameMode()->GetMaximumNumberOfPlayers() == (uint32) max_players );*/
 
-#ifdef __PLAT_XBOX__
-		IN_ADDR host_addr;
-		int port = 0;
-		bool observe_only;
-
-		pParams->GetInteger( Script::GenerateCRC( "Address" ), (int *) &host_addr.s_addr );
-		pParams->GetInteger( Script::GenerateCRC( "Port" ), &port );
-		observe_only = ( gamenet_man->GetJoinMode() == GameNet::vJOIN_MODE_OBSERVE );
-	
-		if( port != 0 )
-		{
-			gamenet_man->SpawnClient( false, false, true, 0 );
-			gamenet_man->JoinServer( observe_only, (unsigned long) host_addr.s_addr, port, 0 );
-		}
-#else
 		const char *server_ip = nullptr;
 		int port = 0;
 		bool observe_only;
@@ -10190,7 +10177,6 @@ bool ScriptJoinServer(Script::CStruct *pParams, Script::CScript *pScript )
 			gamenet_man->SpawnClient( false, false, true, 0 );
 			gamenet_man->JoinServer( observe_only, inet_addr( server_ip ), (unsigned short)port, 0 );
 		}
-#endif
 	}
     
 	return true;
@@ -15421,6 +15407,11 @@ bool ScriptIsJoiningInternetGame(Script::CStruct *pParams, Script::CScript *pScr
 	return false;
 }
 
+bool ScriptTryJoinServerIP(Script::CStruct *pParams, Script::CScript *pScript)
+{
+	return ScriptJoinServer(pParams, pScript);
+}
+
 bool ScriptMultiPlayerOnly(Script::CStruct *pParams, Script::CScript *pScript)
 {
 	(void)pParams;
@@ -15537,6 +15528,22 @@ bool ScriptGetActiveBlendModeName(Script::CStruct *pParams, Script::CScript *pSc
 
     return true;
 }
+
+bool ScriptStubTrue(Script::CStruct *pParams, Script::CScript *pScript)
+{
+	(void)pParams;
+	(void)pScript;
+	return true;
+}
+
+
+bool ScriptStubFalse(Script::CStruct *pParams, Script::CScript *pScript)
+{
+	(void)pParams;
+	(void)pScript;
+	return false;
+}
+
 
 /******************************************************************/
 /*                                                                */

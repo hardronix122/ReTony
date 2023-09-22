@@ -568,10 +568,16 @@ bool ScriptFinishRendering( Script::CStruct* pParams, Script::CScript* pScript )
 
 bool ScriptIsInternetGameHost(Script::CStruct *pParams, Script::CScript *pScript);
 bool ScriptIsJoiningInternetGame(Script::CStruct *pParams, Script::CScript *pScript);
+bool ScriptTryJoinServerIP(Script::CStruct *pParams, Script::CScript *pScript);
+
 bool ScriptMultiPlayerOnly(Script::CStruct *pParams, Script::CScript *pScript);
 bool ScriptSkaterIsCustom(Script::CStruct *pParams, Script::CScript *pScript);
 
 bool ScriptQuitGame(Script::CStruct *pParams, Script::CScript *pScript);
+
+
+bool ScriptStubTrue(Script::CStruct *pParams, Script::CScript *pScript);
+bool ScriptStubFalse(Script::CStruct *pParams, Script::CScript *pScript);
 
 bool ScriptFlushShaderCache(Script::CStruct *pParams, Script::CScript *pScript);
 bool ScriptScrollActiveBlendMode(Script::CStruct *pParams, Script::CScript *pScript);
