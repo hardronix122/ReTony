@@ -359,20 +359,20 @@ namespace Nx
 /*                                                                */
 /*                                                                */
 /******************************************************************/
-    void CXboxGeom::plat_set_bounding_sphere( const Mth::Vector& boundingSphere )
-    {
-        if (mp_instance)
-        {
-            NxWn32::sScene *p_scene = mp_instance->GetScene();
-            if( p_scene )
-            {
-                p_scene->m_sphere_center.x = boundingSphere[X];
-                p_scene->m_sphere_center.y = boundingSphere[Y];
-                p_scene->m_sphere_center.z = boundingSphere[Z];
-                p_scene->m_sphere_radius = boundingSphere[W];
-            }
-        }
-    }
+
+const Mth::Vector CXboxGeom::plat_get_bounding_sphere( void ) const
+{
+	if( mp_instance )
+	{
+		NxWn32::sScene *p_scene = mp_instance->GetScene();
+		if( p_scene )
+		{
+			return Mth::Vector( p_scene->m_sphere_center.x, p_scene->m_sphere_center.y,  p_scene->m_sphere_center.z, p_scene->m_sphere_radius );
+		}
+	}
+	
+	return Mth::Vector( 0.0f, 0.0f, 0.0f, 10000.0f );
+}
 
 
 
