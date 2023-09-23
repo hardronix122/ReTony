@@ -575,8 +575,14 @@ bool ScriptSkaterIsCustom(Script::CStruct *pParams, Script::CScript *pScript);
 
 bool ScriptQuitGame(Script::CStruct *pParams, Script::CScript *pScript);
 
+
 bool ScriptStubTrue(Script::CStruct *pParams, Script::CScript *pScript);
 bool ScriptStubFalse(Script::CStruct *pParams, Script::CScript *pScript);
+
+bool ScriptFlushShaderCache(Script::CStruct *pParams, Script::CScript *pScript);
+bool ScriptScrollActiveBlendMode(Script::CStruct *pParams, Script::CScript *pScript);
+bool ScriptGetActiveBlendMode(Script::CStruct *pParams, Script::CScript *pScript);
+bool ScriptGetActiveBlendModeName(Script::CStruct *pParams, Script::CScript *pScript);
 
 /*****************************************************************************
 **								Inline Functions							**

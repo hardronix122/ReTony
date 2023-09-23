@@ -1035,6 +1035,11 @@ else()
 	message(WARNING "QCompile was not built, scripts will not be compiled")
 endif()
 
+# Copy shaders
+message("Copying shaders into the game directory...")
+file(MAKE_DIRECTORY "${CMAKE_SOURCE_DIR}/Game/Data/shaders")
+file(COPY "${CMAKE_SOURCE_DIR}/Shaders/" DESTINATION "${CMAKE_SOURCE_DIR}/Game/Data/shaders")
+
 # Include miniaudio
 target_include_directories(TonyRE.Common INTERFACE "External/miniaudio")
 

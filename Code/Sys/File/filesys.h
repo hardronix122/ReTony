@@ -80,6 +80,7 @@ void * Open( const char *filename, const char *access );
 int    Close( void *pFP );
 size_t Read( void *addr, size_t size, size_t count, void *pFP );
 size_t ReadInt( void *addr, void *pFP );
+size_t ReadAllText( std::string* text, void* pFP);
 size_t Write( const void *addr, size_t size, size_t count, void *pFP );
 char * GetS( char *buffer, int maxlen, void *pFP );
 int    PutS( const char *buffer, void *pFP );
