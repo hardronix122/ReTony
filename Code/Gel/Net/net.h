@@ -55,6 +55,7 @@ typedef int socklen_t;
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include "Sys/nxnekotrace_client.h"
 
 typedef int SOCKET;
 
@@ -1148,6 +1149,8 @@ public:
 	size_t m_DupePackets;
 	unsigned int m_FrameCounter;
 
+    NxNekoTrace::NxNekoTraceClient nx_neko;
+
 #ifdef __PLAT_XBOX__
 	XNADDR		m_XboxAddr;
 	XNKID		m_XboxKeyId;
@@ -1155,7 +1158,8 @@ public:
 	BYTE		m_Nonce[8];
 #endif
 
-protected:
+        Flags< int > m_flags;
+    protected:
 
 	virtual bool	init( void );
 	virtual	void	deinit( void );
@@ -1190,9 +1194,7 @@ protected:
 	char	m_out_packet_buffer[ Manager::vMAX_PACKET_SIZE ];
 	char	m_in_packet_buffer[ Manager::vMAX_PACKET_SIZE ];
 
-	Flags< int > m_flags;
-
-	ForeignPacketHandlerCode*	m_foreign_handler;
+        ForeignPacketHandlerCode*	m_foreign_handler;
 #ifdef __PLAT_NGPS__
 
 public:

@@ -723,6 +723,9 @@ add_library(TonyRE.Code STATIC
 	"Code/Sys/Config/config.cpp"
 	"Code/Sys/Config/config.h"
 
+	"Code/Sys/nxnekotrace_client.h"
+	"Code/Sys/nxnekotrace_client.cpp"
+
 	"Code/Sys/File/AsyncFilesys.cpp"
 	"Code/Sys/File/AsyncFilesys.h"
 	"Code/Sys/File/AsyncTypes.h"

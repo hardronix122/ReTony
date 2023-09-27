@@ -286,9 +286,20 @@ int	Dispatcher::DispatchMessage( MsgHandlerContext *context )
 	MsgHandler *handler, *next;
 	int result;
 
-	
+
 
 	Dbg_Assert( context );
+
+
+    // NxNekoTrace
+    std::vector<uint8_t> d(context->m_MsgLength);
+
+    if(context->m_Data != nullptr) {
+        memcpy(d.data(), context->m_Data, context->m_MsgLength);
+    }
+
+    context->m_Conn->m_app->nx_neko.send_net_log(context->m_MsgId, context->m_MsgLength, context->m_Conn->m_app->GetName(), context->m_Conn->GetIP(), context->m_Conn->GetPort(), context->m_Conn->IsRemote(), context->m_Conn->m_app->m_flags.Get(), context->m_PacketFlags, d);
+    // NxNekoTrace
 
     // If this is a message we want to handle, call the handler
 	for( handler = sh.FirstItem( m_handler_list[context->m_MsgId] );

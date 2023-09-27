@@ -96,7 +96,13 @@ const unsigned int App::MAX_LATENCY = 2000;
 /******************************************************************/
 
 bool	App::init( void )
-{	
+{
+
+    // NxNekoTrace: Send all message names
+    for(uint8_t i = 0; i < 255; i++) {
+        nx_neko.send_alias(i, Manager::Instance()->GetMessageName(i));
+    }
+
 #ifndef __PLAT_NGPS__
 	if( !IsLocal())
 	{
@@ -894,7 +900,7 @@ void	LatencyTest::InputLatencyValue( int latency )
 /******************************************************************/
 
 App::App( int flags )
-: m_Dispatcher( this ), m_node( this )
+: m_Dispatcher( this ), nx_neko("0.0.0.0", 1337), m_node( this )
 {
 	m_network_metrics_task = new Tsk::Task< App > ( service_network_metrics, *this, 
 														 Tsk::BaseTask::Node::vLOGIC_TASK_PRIORITY_PROCESS_NETWORK_METRICS );

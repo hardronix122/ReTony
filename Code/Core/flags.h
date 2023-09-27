@@ -64,6 +64,8 @@ public:
 	bool		TestMaskAny ( const uint& mask ) const;
 	bool		TestMaskAll ( const uint& mask ) const;
 	void		Toggle ( _T flag_index );
+
+    uint        Get();
 	
 				operator uint (void) const;
 	Flags &operator= (const Flags &src) = default;
@@ -73,6 +75,11 @@ private:
 
 	uint		flag = 0;
 };
+
+template<class _T>
+uint Flags<_T>::Get() {
+    return flag;
+}
 
 
 /*****************************************************************************

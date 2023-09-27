@@ -127,7 +127,7 @@ target_include_directories(TonyRE.Wn32 PUBLIC "Code")
 
 if(WIN32)
 	# Set platform defines
-	target_compile_definitions(TonyRE.Wn32 PUBLIC __PLAT_WN32__)
+	target_compile_definitions(TonyRE.Wn32 PUBLIC __PLAT_WN32__ NET_DEBUG_MESSAGES)
 
 	# Link libraries
 	target_link_libraries(TonyRE.Wn32 PUBLIC Ws2_32 SDL2-static glad glm)
@@ -135,7 +135,7 @@ endif()
 
 if (UNIX)
 	# Set platform defines
-	target_compile_definitions(TonyRE.Wn32 PUBLIC __PLAT_LINUX__)
+	target_compile_definitions(TonyRE.Wn32 PUBLIC __PLAT_LINUX__ NET_DEBUG_MESSAGES)
 
 	# Link libraries
 	target_link_libraries(TonyRE.Wn32 PUBLIC SDL2-static glad glm)
